@@ -1,7 +1,7 @@
 var gr = (1+Math.sqrt(5))/2; //golden ratio
 var dimensions = 3; //3d space...add time at some point
 var originZero = {"x":0,"y":0,"z":0};
-var tollernace = 1.4;
+var tollernace = 1.35;
 
 
 
