@@ -38,6 +38,7 @@
                     sphere=divideSphere(pairs,sphere,getColor);
                     pairs=getUniquePointPairs(sphere);
                 }
+                writeStats(sphere,pairs,{"x":0,"y":0});
             }
 
             function rotateX(point, radians) {
@@ -100,16 +101,45 @@
                 if(distance < 1000) {
                     distance += 10;
                 }
-                writeStats(sphere,pairs,{"x":0,"y":0});
+                
             }
 
             function writeStats(points,lines){
                 var tag=document.getElementById("stats");
+                var lineLength = {};
+                var temp;
+
+                //calculate how many diffrent line length there are
+
+                for(var i=0,c=lines.length;i<c;i+=1){
+                    temp = calcDistance(lines[i][0],lines[i][1]).toFixed(3);
+                    if(lineLength[temp]){
+                        lineLength[temp]+=1;
+                    } else {
+                        lineLength[temp]=1;
+                    }
+                }
+                temp = "";
+                for(var i in lineLength){
+                    if(lineLength.hasOwnProperty(i)){
+                        temp+= i+"x"+lineLength[i]+", ";
+                    }
+                }
+                lineLength = temp;
+                //TODO Add StDev here... in loop above
+
+                //closest points
+                temp = getDistanceFromSinglePoint(sphere,{"x":origin.x,"y":origin.y,"z":100});
+                sphere[temp[0].point].color = "rgba(255,0,0,1)"//get closest (temp[0]) point id (.point) and set that point to red
 
                 tag.innerHTML= "Points: "+points.length+"<br/>\n"+
                 "Lines: "+lines.length+"<br/>\n"+
                 "Faces: "+lines.length*2/3+"<br/>\n"+
-                "Position X: "+origin.x+", Position Y:"+origin.y+"<br/>\n";
+                "Position X: "+origin.x+", Position Y:"+origin.y+"<br/>\n"+
+              
+                "Line Length: "+lineLength+"<br/>\n"+
+                "Closest Point: "+lines.length*2/3+"<br/>\n"+
+                "Face Points: "+lines.length*2/3+"<br/>\n";
             }
 
             function transformShape(points,ctx,width,height){
@@ -239,10 +269,13 @@
                 setInValue('siz');
                 document.body.ondblclick = moveByMouse;
                 document.getElementById("sphere3d").onmousemove = function(e){
-                    origin.x = e.x;
-                    origin.y = e.y;
+                    //console.log(e);
+                    origin.x = e.offsetX;
+                    origin.y = e.offsetY;
+                    writeStats(sphere,pairs,origin);
                 };
                 controlInitSize();
+                writeStats(sphere,pairs,origin);
             }
 
             function controlInitSize(){
@@ -258,6 +291,7 @@
                             default : sphere = createPoints(getColor); 
                         }
                         pairs=getUniquePointPairs(sphere);
+                        writeStats(sphere,pairs,origin);
                     }
                 }
             }

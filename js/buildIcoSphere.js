@@ -16,7 +16,7 @@ function createPoints(color,mode){
 		} else if (mode < 7){//between 4 and 6
 			var preset = [
 			[{"x":0.5,"y":0.433,"z":0},{"x":-0.5,"y":0.433,"z":0},{"x":0,"y":-0.433,"z":0.5},{"x":0,"y":-0.433,"z":-0.5}],
-			[{"x":-0.866,"y":0,"z":0.5},{"x":-0.866,"y":0,"z":-0.5},{"x":1,"y":0,"z":0},
+			[{"x":-0.866,"y":0,"z":0.8},{"x":-0.866,"y":0,"z":-0.8},{"x":1,"y":0,"z":0},
 			{"x":0,"y":1,"z":0},{"x":0,"y":-1,"z":0}],
 			[{"x":1,"y":0,"z":0},{"x":-1,"y":0,"z":0},{"x":0,"y":1,"z":0},
 			{"x":0,"y":0,"z":-1},{"x":0,"y":0,"z":1},{"x":0,"y":-1,"z":0}]
@@ -128,7 +128,7 @@ function getDistanceFromPoints(points){
 	var px = [];
 
 	for(var i=0,c=points.length;i<c;i+=1){
-		 px.push([]);
+		px.push([]);
 		for(var j=0;j<c;j+=1){
 			if(j==i){//skip distance of same point as it's always zero
 				continue;
@@ -139,6 +139,18 @@ function getDistanceFromPoints(points){
 		px[i]=px[i].sort(minDistance)
 		clipPoints(px[i]);
 	}
+	return px;
+}
+
+function getDistanceFromSinglePoint(points,point){
+	var px = [];
+
+	for(var i=0,c=points.length;i<c;i+=1){		
+			px.push({"point":i,"distance":calcDistance(point,points[i])});
+	}
+	px=px.sort(minDistance)
+	//clipPoints(px[i]);
+
 	return px;
 }
 
