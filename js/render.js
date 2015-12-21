@@ -100,6 +100,16 @@
                 if(distance < 1000) {
                     distance += 10;
                 }
+                writeStats(sphere,pairs,{"x":0,"y":0});
+            }
+
+            function writeStats(points,lines){
+                var tag=document.getElementById("stats");
+
+                tag.innerHTML= "Points: "+points.length+"<br/>\n"+
+                "Lines: "+lines.length+"<br/>\n"+
+                "Faces: "+lines.length*2/3+"<br/>\n"+
+                "Position X: "+origin.x+", Position Y:"+origin.y+"<br/>\n";
             }
 
             function transformShape(points,ctx,width,height){
@@ -228,11 +238,33 @@
                 setInValue('rota');
                 setInValue('siz');
                 document.body.ondblclick = moveByMouse;
+                document.getElementById("sphere3d").onmousemove = function(e){
+                    origin.x = e.x;
+                    origin.y = e.y;
+                };
+                controlInitSize();
+            }
+
+            function controlInitSize(){
+                var rad = document.getElementsByName("radSize");
+                for(var i = 0,c = rad.length;i<c;i+=1){
+                    rad[i].onclick = function(){
+                        switch(this.value){
+                            case "4": sphere = createPoints(getColor,4); break;
+                            case "5": sphere = createPoints(getColor,5); break;
+                            case "6": sphere = createPoints(getColor,6); break;
+                            case "12": sphere = createPoints(getColor); break;
+                            case "custom": sphere = createPoints(getColor,document.getElementById("cust").value); break;
+                            default : sphere = createPoints(getColor); 
+                        }
+                        pairs=getUniquePointPairs(sphere);
+                    }
+                }
             }
 
             function setInValue(n,name){
                 if(name){
-
+                    document.getElementById('cus').click();
                 } else {
                    document.getElementById(n+'Val').innerHTML = document.getElementById(n).value; 
                }                

@@ -44,14 +44,14 @@
           <input type = "radio"
                  name = "radSize"
                  id = "ico"
-                 value = "0" />
-          <label for = "sizeLarge">20 Points</label><br/>
+                 value = "12" />
+          <label for = "sizeLarge">12 Points</label><br/>
           <input type = "radio"
                  name = "radSize"
                  id = "cus"
                  value = "custom" />
           <label for = "sizeLarge">Custom</label>
-          <input id="cust" type="number" min="1" oninput="setInValue('cust')" />
+          <input id="cust" type="number" min="4" oninput="setInValue('cus',1)" />
         </p>       
       </fieldset>     <br/>
     Division Tollerance <input id="tol" type="number" min="1" oninput="setInValue('tol')" step="0.1" value="1.3" max="3"/><br/>
@@ -62,6 +62,9 @@
     <input type="button" id="col" value="Reset Colors" onclick="resetColor()">
 
     <p> To controll the sphere by mouse double click anywhere on the document and then start moving the mouse. Doubleclick again to stop </p>
+
+    <p>Stats</p>
+    <p id="stats"></p>
 
 
 </body>
