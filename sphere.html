@@ -54,7 +54,8 @@
           <input id="cust" type="number" min="4" oninput="setInValue('cus',1)" />
         </p>       
       </fieldset>     <br/>
-    Division Tollerance <input id="tol" type="number" min="1" oninput="setInValue('tol')" step="0.1" value="1.3" max="3"/><br/>
+    Division Tollerance <input id="tol" type="number" min="1" step="0.1" value="1.3" max="3" oninput="setInput('tol')"/><br/>
+    # of Simulations <input id="sim" type="number" min="1" step="1" value="300" max="10000" oninput="setInput('sim')"/><br/>
     Distance Tiny<input id="dist" type="range" max="10" oninput="setInValue('dist')" />Big <span id="distVal"></span><br/>
     Rotation Speed Fast<input id="rota" type="range" step="10" oninput="setInValue('rota')"/>Slow <span id="rotaVal"></span><br/>
     Point Size Small<input id="siz" type="range" min="1" max="5" step="0.5" oninput="setInValue('siz')"/>Big <span id="sizVal"></span><br/>

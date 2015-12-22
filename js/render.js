@@ -41,6 +41,19 @@
                 writeStats(sphere,pairs,{"x":0,"y":0});
             }
 
+            function setInput(name){
+                switch(name){
+                    case "tol":
+                    tollernace=document.getElementById(name).value;
+                    break;
+                    case "sim":
+                    simuls=document.getElementById(name).value;
+                    break;
+
+                }
+                controlInitSize();
+            }
+
             function rotateX(point, radians) {
                 var y = point.y;
                 point.y = (y * Math.cos(radians)) + (point.z * Math.sin(radians) * -1.0);
@@ -108,23 +121,32 @@
                 var tag=document.getElementById("stats");
                 var lineLength = {};
                 var temp;
+                var deviation = {"stdev":0,"avrg":0};
 
                 //calculate how many diffrent line length there are
 
                 for(var i=0,c=lines.length;i<c;i+=1){
                     temp = calcDistance(lines[i][0],lines[i][1]).toFixed(3);
+                    
                     if(lineLength[temp]){
                         lineLength[temp]+=1;
                     } else {
                         lineLength[temp]=1;
                     }
+                    deviation.avrg+=parseInt(temp);//build avrage sum
                 }
                 temp = "";
+                
+                deviation.avrg/=lines.length;
                 for(var i in lineLength){
                     if(lineLength.hasOwnProperty(i)){
                         temp+= i+"x"+lineLength[i]+", ";
+                        deviation.stdev+=Math.pow(i-deviation.avrg,2)*lineLength[i];
                     }
                 }
+                
+                deviation.stdev = Math.sqrt(deviation.stdev/lines.length);
+               
                 lineLength = temp;
                 //TODO Add StDev here... in loop above
 
@@ -138,6 +160,7 @@
                 "Position X: "+origin.x+", Position Y:"+origin.y+"<br/>\n"+
               
                 "Line Length: "+lineLength+"<br/>\n"+
+                "Line Standart Deviation: "+deviation.stdev.toFixed(5)+"<br/>\n"+
                 "Closest Point: "+lines.length*2/3+"<br/>\n"+
                 "Face Points: "+lines.length*2/3+"<br/>\n";
             }

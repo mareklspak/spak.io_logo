@@ -2,6 +2,8 @@ var gr = (1+Math.sqrt(5))/2; //golden ratio
 var dimensions = 3; //3d space...add time at some point
 var originZero = {"x":0,"y":0,"z":0};
 var tollernace = 1.35;
+var simuls = 3000;
+
 
 
 
@@ -26,7 +28,7 @@ function createPoints(color,mode){
 				points[i].color=color();
 			}
 		} else {
-
+			points = runSimulation(mode, simuls, color);
 		}
 	} else {
 		//create base pattern
@@ -71,8 +73,63 @@ function minDistance (p1,p2) {
 		return 0;
 	}
 }
+
+function runSimulation(nPoints,simulations,color){
+	var points = [];
+	var vectors = [];
+	var vector;
+	var distance;
+	var point;
+	var i,j,k;
+	for(var i = 0; i < nPoints; i+=1){
+		point = {"x":Math.random(),"y":Math.random(),"z":Math.random(),"color":color()};
+		points.push(scalePoint(point));
+	}
+
+	for(i = 0; i < simulations; i+=1){
+		//create main direction Vector
+		for(j = 0; j < nPoints; j+=1){
+			vectors[j]={"x":0,"y":0,"z":0};
+			for(k = 0;k < nPoints;k+=1){
+				if(k == j){
+					continue;
+				}
+				vector = {"x":points[j].x-points[k].x,"y":points[j].y-points[k].y,"z":points[j].z-points[k].z};
+				distance = getRadius(vector); //radius is the same as the distance in this case
+				vector=scalePoint(vector,forceFormula(distance));
+				vectors[j]=addVector(vectors[j], vector);
+			}
+		}
+		//apply direction vector to each point and scale to radius which is one
+		for(j = 0;j<nPoints;j+=1){
+			points[j]=scalePoint(addVector(points[j],vectors[j]));
+		}
+
+	}
+
+	return points;
+}
+
+function addVector(v1,v2){
+	v1.x+=v2.x;
+	v1.y+=v2.y;
+	v1.z+=v2.z;
+
+	return v1;
+}
+
+function forceFormula(distance,simNr){
+	//console.log("scale force",forceScale);
+	var  force;
+	force = -0.5*Math.log(distance+0.313)+0.4192;
+	force/=simNr;
+	return force;
+}
+
+
 //remove point refrences that we don't need
 function clipPoints(item){
+	//console.log("tollerance",tollernace);
 	for(var i=0,c=item.length;i<c;i+=1){
 		if(item[i].distance>item[0].distance*tollernace){//build in a tollernace for non perfect cuts of 15 %
 			item.splice(i,c-i);
@@ -106,22 +163,25 @@ function divideSphere(pairs, points, colorFunc){
 		"z":(p1.z+p2.z)/2
 		};
 
-		//how much shorter then the radius?
-		
-		scale=radius/calcDistance(point,originZero);
-		
-
-		point.x*=scale;
-		point.y*=scale;
-		point.z*=scale;
-
-		points.push(point);//add point to array
+		points.push(scalePoint(point,radius));//add point to array
 		if(colorFunc){
 			points[points.length-1].color=colorFunc();
 		}
 	}
 	console.log(points);
 	return points;
+}
+
+function scalePoint(point,radius){
+	radius = radius || 1;
+	//how much shorter then the radius?
+	scale=radius/calcDistance(point,originZero);	
+
+	point.x*=scale;
+	point.y*=scale;
+	point.z*=scale;
+
+	return point;
 }
 
 function getDistanceFromPoints(points){
