@@ -89,7 +89,7 @@
                 ctx.clearRect(0, 0, width, height);
             
 
-                ctx.globalCompositeOperation = "lighter";
+                ctx.globalCompositeOperation = "source-over";
                 //console.log(sphere);
 
                 //draw all lines

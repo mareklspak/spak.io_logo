@@ -28,7 +28,7 @@ function createPoints(color,mode){
 				points[i].color=color();
 			}
 		} else {
-			points = runSimulation(mode, simuls, color);
+			points = fibonacciSphere(mode,color);//runSimulation(mode, simuls, color);
 		}
 	} else {
 		//create base pattern
@@ -102,11 +102,34 @@ function runSimulation(nPoints,simulations,color){
 		}
 		//apply direction vector to each point and scale to radius which is one
 		for(j = 0;j<nPoints;j+=1){
-			points[j]=scalePoint(addVector(points[j],vectors[j]));
+			points[j]=scalePoint(addVector(points[j],scalePoint(vectors[j],0.1)));
 		}
 
 	}
 
+	return points;
+}
+
+function fibonacciSphere(nPoints,color){
+	var points = [];
+	var distance = (3-Math.sqrt(5))*Math.PI;
+	var dz = 2/nPoints;
+	var lon = 0;
+	var z = 1-dz/2;
+	/*
+	http://mathinsight.org/spherical_coordinates
+	http://forum.unity3d.com/threads/distributing-empty-gameobjects-evenly-on-a-sphere.215479/
+	http://lgdv.cs.fau.de/uploads/publications/spherical_fibonacci_mapping.pdf
+	*/
+
+	for(var i=1;i<=nPoints;i+=1){
+		var r = Math.sqrt(1-z*z);
+        points.push({"x":Math.cos(lon)*r,"y":Math.sin(lon)*r,"z":z,"color":color()});
+        z-=dz;
+        lon+=distance;
+	}
+
+	console.log("Points",points)
 	return points;
 }
 
